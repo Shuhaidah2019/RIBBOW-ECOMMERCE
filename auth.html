@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RIBBOW | Login / Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fefbff;
+    }
+    .container {
+      max-width: 500px;
+      margin-top: 50px;
+      background: #fff0fa;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #e0b3ff;
+    }
+    .nav-tabs .nav-link.active {
+      background-color: #8a2be2;
+      color: white !important;
+    }
+    .nav-tabs .nav-link {
+      color: #6a1b9a;
+      font-weight: 500;
+    }
+    .btn-purple {
+      background-color: #8a2be2;
+      color: white;
+      border: none;
+      font-weight: 500;
+    }
+    .btn-purple:hover {
+      background-color: #6a1b9a;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <ul class="nav nav-tabs mb-4" id="authTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTab" type="button" role="tab">Login</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerTab" type="button" role="tab">Register</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="authTabContent">
+    <!-- Login Form -->
+    <div class="tab-pane fade show active" id="loginTab" role="tabpanel">
+      <form action="login.php" method="POST">
+        <div class="mb-3">
+          <label>Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-purple w-100">Login</button>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div class="tab-pane fade" id="registerTab" role="tabpanel">
+      <form action="register.php" method="POST">
+        <div class="mb-3">
+          <label>Name</label>
+          <input type="text" class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+          <label>Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-purple w-100">Register</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

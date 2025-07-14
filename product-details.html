@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RIBBOW | Product Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+</head>
+<body style="font-family: 'Poppins', sans-serif; background-color: #fefbff;">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg shadow-sm py-3" style="background-color: #f5e1ff;">
+    <div class="container">
+      <a class="navbar-brand" href="index.html" style="font-weight: 700; font-size: 1.8rem; color: #8a2be2;">RIBBOW</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html" style="color: #6a1b9a;">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="products.html" style="color: #6a1b9a;">Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about" style="color: #6a1b9a;">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact" style="color: #6a1b9a;">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Product Details Section -->
+  <section id="product-details" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <img src="https://source.unsplash.com/500x500/?beaded,handbag" class="img-fluid" alt="Product Image" style="object-fit: cover; height: 400px;">
+        </div>
+        <div class="col-md-6">
+          <h2 class="text-purple" style="color: #6a1b9a;">Beaded Handbags</h2>
+          <p class="h4">₦30,000</p>
+          <p class="lead">This beautiful, hand-crafted beaded handbag is designed to elevate your style and add a touch of luxury to any outfit. Made with the finest materials, it's perfect for a special occasion or daily use.</p>
+          <ul>
+            <li>Color: Purple</li>
+            <li>Material: Beads and fabric</li>
+            <li>Dimensions: 12" x 10" x 4"</li>
+          </ul>
+          <div class="d-flex justify-content-start">
+            <!-- "Buy Now" button -->
+            <button type="button" class="btn btn-primary" style="background-color: #8a2be2; border: none;" onclick="addToCart()">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center" style="background-color: #6a1b9a; color: white; padding: 20px 0;">
+    <div class="container">
+      <p>&copy; 2025 RIBBOW. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Function to add product to shopping cart
+    function addToCart() {
+      const product = {
+        name: "Beaded Handbags",
+        price: "₦15,000",
+        description: "Hand-crafted beaded handbag to elevate your style.",
+        imageUrl: "https://source.unsplash.com/500x500/?beaded,handbag",
+        quantity: 1 // Default quantity is 1, can be adjusted
+      };
+
+      // Check if cart already exists in localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Add the product to the cart
+      cart.push(product);
+
+      // Save the updated cart back to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Alert the user that the product was added to the cart
+      alert('Product added to your cart!');
+    }
+  </script>
+</body>
+</html>
