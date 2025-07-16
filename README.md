@@ -3,7 +3,7 @@
 Welcome to **RIBBOW**, a custom-built e-commerce website designed for showcasing and selling beautifully handcrafted products.
 
 ## 🌟 Features
-- 💻 Responsive Frontend built with HTML, CSS, and JavaScript
+- 💻 Responsive Frontend built with HTML, CSS, Boostrap and JavaScript
 - 🛒 Add to Cart and Checkout functionality
 - 🔐 Login & Register system using PHP and MySQL
 - 📦 Product details page
@@ -14,7 +14,7 @@ Welcome to **RIBBOW**, a custom-built e-commerce website designed for showcasing
 ![screenshot](Images/Banner.png) <!-- Replace with your preferred screenshot -->
 
 ## 🛠 Technologies Used
-- HTML5, CSS3, JavaScript
+- HTML5, CSS3, BOOSTRAP, JavaScript
 - PHP
 - MySQL
 - Git & GitHub
