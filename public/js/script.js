@@ -1,266 +1,193 @@
-/*home page*/
+
+
+// ===============================
+// DOM Loaded Handler
+// ===============================
+document.addEventListener("DOMContentLoaded", function () {
+  const path = window.location.pathname;
+  const currentPage = path.substring(path.lastIndexOf("/") + 1);
+
+  // Redirect if not logged in
+  const user = localStorage.getItem("loggedInUser");
+
+  if (
+    currentPage === "index.html" ||
+    ["shop.html", "cart.html", "checkout.html"].includes(currentPage)
+  ) {
+    if (!user) {
+      alert("Please log in to access this page.");
+      window.location.href = "auth.html";
+    }
+  }
+
+//dark and light mode
+  document.addEventListener("DOMContentLoaded", function () {
+  const themeToggle = document.getElementById("themeToggle");
+  const icon = themeToggle.querySelector("i");
+
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+    icon.classList.remove("fa-moon");
+    icon.classList.add("fa-sun");
+  }
+
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+      icon.classList.remove("fa-moon");
+      icon.classList.add("fa-sun");
+      localStorage.setItem("theme", "dark");
+    } else {
+      icon.classList.remove("fa-sun");
+      icon.classList.add("fa-moon");
+      localStorage.setItem("theme", "light");
+    }
+  });
+});
+
+
+  // ===============================
+  // Background Video Playlist Logic
+  // ===============================
+  const video = document.getElementById("heroVideo");
+
+  if (video) {
+    const videoSources = [
+      "media/bg-video.mp4",
+      "media/2bg-video.mp4",
+      "media/3bg-video.mp4"
+    ];
+
+    let currentVideo = 0;
+
+    function playNextVideo() {
+      video.src = videoSources[currentVideo];
+      video.load();
+      video.play();
+      currentVideo = (currentVideo + 1) % videoSources.length;
+    }
+
+    video.addEventListener("ended", playNextVideo);
+    playNextVideo();
+  }
+});
+
+// ===============================
+// Redirect to shop.html if user is logged in
+// ===============================
 function goToShop() {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  if (isLoggedIn === "true") {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (user) {
     window.location.href = "shop.html";
   } else {
-    alert("Please login or register to access the shop.");
+    alert("Please login to continue shopping.");
     window.location.href = "auth.html";
   }
 }
-/*add to cart*/
-function addToCart() {
-  const params = new URLSearchParams(window.location.search);
-  const title = decodeURIComponent(params.get('title') || '');
-  const price = decodeURIComponent(params.get('price') || '');
-  const image = decodeURIComponent(params.get('image') || '');
 
-  if (!title || !price || !image) {
-    alert("Missing product information.");
-    return;
-  }
-
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  cart.push({ title, price, image });
-  localStorage.setItem('cart', JSON.stringify(cart));
-  alert(`${title} has been added to your cart.`);
+// ===============================
+// Logout Handler
+// ===============================
+function logoutUser() {
+  localStorage.removeItem("loggedInUser");
+  alert("You have been logged out.");
+  window.location.href = "auth.html";
 }
 
-/*auth page*/
-// Redirect logged-in users to the shop page
-document.addEventListener("DOMContentLoaded", function () {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  if (isLoggedIn === "true") {
-    // Optional: Only redirect if on auth.html
-    if (window.location.pathname.includes("auth.html")) {
-      window.location.href = "shop.html";
-    }
-  }
+//form options//
+document.addEventListener("DOMContentLoaded", () => {
+  const loginTab = document.getElementById("login-tab");
+  const signupTab = document.getElementById("signup-tab");
+  const welcomeText = document.getElementById("welcomeMessage");
 
-  // Check for a message in the URL and show it
-  const urlParams = new URLSearchParams(window.location.search);
-  const message = urlParams.get("msg");
-  if (message) {
-    alert(decodeURIComponent(message));
+  if (!loginTab || !signupTab || !welcomeText) return;
+
+  // Click event for Login
+  loginTab.addEventListener("click", () => {
+    welcomeText.innerHTML = "<h2>Hey<br>Welcome<br>Back!</h2>";
+  });
+
+  // Click event for Signup
+  signupTab.addEventListener("click", () => {
+    welcomeText.innerHTML = "<h2>Hey<br>Nice to<br>Meet You!</h2>";
+  });
+
+  // Detect if opened via auth.html#signin
+  if (window.location.hash === "#signin") {
+    welcomeText.innerHTML = "<h2>Hey<br>Nice to<br>Meet You</h2>";
   }
 });
 
-/* cart.html logic */
-if (window.location.pathname.includes("cart.html")) {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const cartContainer = document.getElementById('cartContainer');
-  const totalContainer = document.getElementById('totalContainer');
+//toggle password
+document.addEventListener("DOMContentLoaded", () => {
+  const toggleBtn = document.getElementById("toggleRegPassword");
+  const passwordInput = document.getElementById("regPassword");
 
-  function renderCart() {
-    cartContainer.innerHTML = '';
-    let total = 0;
-
-    if (cart.length === 0) {
-      cartContainer.innerHTML = '<p class="text-center">Your cart is empty.</p>';
-      totalContainer.textContent = '';
-      return;
-    }
-
-    cart.forEach((item, index) => {
-      total += parseInt(item.price);
-      const imagePath = item.image ? decodeURIComponent(item.image) : 'placeholder.jpg';
-
-      const div = document.createElement('div');
-      div.className = 'cart-item row align-items-center';
-      div.innerHTML = `
-        <div class="col-md-2 col-sm-4 mb-2 mb-md-0">
-          <img src="${imagePath}" class="img-fluid rounded" alt="${item.title}">
-        </div>
-        <div class="col-md-6 col-sm-8">
-          <h5>${item.title}</h5>
-          <p>₦${parseInt(item.price).toLocaleString()}</p>
-        </div>
-        <div class="col-md-4 text-end">
-          <button class="btn btn-sm btn-danger" onclick="removeItem(${index})">Remove</button>
-        </div>
-      `;
-      cartContainer.appendChild(div);
-    });
-
-    totalContainer.textContent = `Total: ₦${total.toLocaleString()}`;
-  }
-
-  window.removeItem = function(index) {
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCart();
-  }
-
-  window.clearCart = function() {
-    if (confirm("Are you sure you want to clear your cart?")) {
-      localStorage.removeItem('cart');
-      cart.length = 0;
-      renderCart();
-    }
-  }
-
-  renderCart();
-}
-
-/*checkout.html logic */
-if (window.location.pathname.includes("checkout.html")) {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const checkoutContainer = document.getElementById('checkoutContainer');
-  const totalContainer = document.getElementById('totalContainer');
-
-  function renderCheckout() {
-    checkoutContainer.innerHTML = '';
-    let total = 0;
-
-    if (cart.length === 0) {
-      checkoutContainer.innerHTML = '<p class="text-center">Your cart is empty.</p>';
-      totalContainer.textContent = '';
-      return;
-    }
-
-    cart.forEach(item => {
-      total += parseInt(item.price);
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'checkout-item row align-items-center';
-
-      itemDiv.innerHTML = `
-        <div class="col-md-2 col-sm-4 mb-2 mb-md-0">
-          <img src="${decodeURIComponent(item.image)}" class="img-fluid rounded" alt="${item.title}">
-        </div>
-        <div class="col-md-6 col-sm-8">
-          <h5>${item.title}</h5>
-          <p>₦${parseInt(item.price).toLocaleString()}</p>
-        </div>
-      `;
-      checkoutContainer.appendChild(itemDiv);
-    });
-
-    totalContainer.textContent = `Total: ₦${total.toLocaleString()}`;
-  }
-
-  renderCheckout();
-}
-
-/*contact.html logic */
-function sendMessage() {
-  const name = document.getElementById("name")?.value.trim();
-  const email = document.getElementById("email")?.value.trim();
-  const message = document.getElementById("message")?.value.trim();
-  const status = document.getElementById("messageStatus");
-
-  if (name && email && message) {
-    status.innerHTML = `<p class="text-success">Thank you, ${name}! Your message has been sent successfully.</p>`;
-    document.getElementById("contactForm").reset();
-  } else {
-    status.innerHTML = `<p class="text-danger">Please fill in all fields.</p>`;
-  }
-}
- 
-/*login page*/
-// Toggle Show/Hide Password
-const togglePasswordBtn = document.getElementById("togglePassword");
-const passwordInput = document.getElementById("password");
-
-if (togglePasswordBtn && passwordInput) {
-  togglePasswordBtn.addEventListener("click", () => {
+  toggleBtn.addEventListener("click", () => {
     const type = passwordInput.getAttribute("type");
     if (type === "password") {
       passwordInput.setAttribute("type", "text");
-      togglePasswordBtn.textContent = "Hide";
+      toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
     } else {
       passwordInput.setAttribute("type", "password");
-      togglePasswordBtn.textContent = "Show";
+      toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
     }
   });
-}
-
-/*login page*/
-// Enable Login Button Only When Fields Are Filled
-const loginForm = document.getElementById("loginForm");
-const loginBtn = document.getElementById("loginBtn");
-const emailInput = document.getElementById("email");
-
-if (loginForm && loginBtn && emailInput && passwordInput) {
-  loginForm.addEventListener("input", () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    loginBtn.disabled = !(email && password);
-  });
-}
-
-// === Register Form Behavior*/
-const regForm = document.getElementById("registerForm");
-const regName = document.getElementById("regName");
-const regEmail = document.getElementById("regEmail");
-const regPassword = document.getElementById("regPassword");
-const regBtn = document.getElementById("registerBtn");
-const toggleRegPassword = document.getElementById("toggleRegPassword");
-
-if (regForm && regName && regEmail && regPassword && regBtn) {
-  regForm.addEventListener("input", () => {
-    const name = regName.value.trim();
-    const email = regEmail.value.trim();
-    const password = regPassword.value.trim();
-    regBtn.disabled = !(name && email && password);
-  });
-}
-
-if (toggleRegPassword && regPassword) {
-  toggleRegPassword.addEventListener("click", () => {
-    const type = regPassword.getAttribute("type");
-    regPassword.setAttribute("type", type === "password" ? "text" : "password");
-    toggleRegPassword.textContent = type === "password" ? "Hide" : "Show";
-  });
-}
-
-/* Product Details Page*/
-function addToCart() {
-  const product = {
-    title: "Beaded Handbags",
-    price: "30000",
-    image: "Images/beadedhandbag.jpg" // Make sure this file exists
-  };
-
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(product);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("Product added to your cart!");
-}
-// Add product to cart (used on product-details.html)
-function addToCart() {
-  const product = {
-    title: "Beaded Handbags",
-    price: "30000",
-    image: "Images/beadedblack.jpg" // Update to match your actual local image path
-  };
-
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(product);
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert("Product added to your cart!");
-}
-  
-/*Add to Cart from products.html*/
-function addToCartFromProducts(title, price, image) {
-  const product = {
-    title: title,
-    price: price,
-    image: image
-  };
-
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(product);
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  alert(`${title} has been added to your cart!`);
-}
-
-/* Auto-redirect logged-in users away from register page */
-document.addEventListener("DOMContentLoaded", function () {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-  if (isLoggedIn === "true" && window.location.pathname.includes("register.html")) {
-    window.location.href = "shop.html";
-  }
 });
 
+
+//categorie section
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get('category'); // "beaded", "totes", etc.
+
+  const allProducts = document.querySelectorAll('.product-card');
+
+  allProducts.forEach(product => {
+    const productCategory = product.dataset.category;
+
+    if (!category || category === 'all') {
+      product.style.display = 'block'; // Show all
+    } else if (productCategory === category) {
+      product.style.display = 'block'; // Show only the selected category
+    } else {
+      product.style.display = 'none'; // Hide other categories
+    }
+  });
+});
+
+// Enable submenu toggle inside dropdown
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
+    element.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      let submenu = this.nextElementSibling;
+      if (submenu && submenu.classList.contains('dropdown-menu')) {
+        submenu.classList.toggle('show');
+      }
+    });
+  });
+});
+
+//sub menu or categories
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get("category"); // e.g. "beaded", "hairclips", etc.
+
+  const allProducts = document.querySelectorAll(".product-card");
+
+  allProducts.forEach(product => {
+    const productCategory = product.dataset.category;
+
+    if (!category || category === "all") {
+      product.style.display = "block"; // Show all products
+    } else if (productCategory === category) {
+      product.style.display = "block"; // Show matching
+    } else {
+      product.style.display = "none"; // Hide others
+    }
+  });
+});

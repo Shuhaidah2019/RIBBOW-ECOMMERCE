@@ -1,61 +1,101 @@
+<?php
+session_start();
+if (isset($_SESSION['user_id'])) {
+  header("Location: index.php");
+  exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RIBBOW | Login / Register</title>
+  <title>RIBBOW | Login / Signup</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="light-mode">
+<div class="auth-wrapper">
+  <!-- Left Side: Form Section -->
+  <div class="auth-left">
+    <div class="form-box">
+      <!-- Tab Nav -->
+      <ul class="nav nav-tabs" id="authTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTab" type="button" role="tab">Login</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signupTab" type="button" role="tab">Signup</button>
+        </li>
+      </ul>
 
-<div class="container auth-container">
-  <ul class="nav nav-tabs mb-4" id="authTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTab" type="button" role="tab">Login</button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerTab" type="button" role="tab">Register</button>
-    </li>
-  </ul>
+      <!-- Form Panels -->
+      <div class="tab-content" id="authTabContent">
+        <!-- Login Form -->
+        <div class="tab-pane fade show active" id="loginTab" role="tabpanel">
+         <form action="../backend/login.php" method="POST">
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label>Password</label>
+              <input type="password" class="form-control" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-purple w-100">Login</button>
+          </form>
+        </div>
 
-  <div class="tab-content" id="authTabContent">
-    <!-- Login Form -->
-    <div class="tab-pane fade show active" id="loginTab" role="tabpanel">
-      <form action="login.php" method="POST">
-        <div class="mb-3">
-          <label>Email</label>
-          <input type="email" class="form-control" name="email" required>
+        <!-- Signup Form -->
+        <div class="tab-pane fade" id="signupTab" role="tabpanel">
+          <form action="../backend/signup.php" method="POST">
+            <div class="mb-3">
+              <label>Name</label>
+              <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+              <label for="regPassword">Password</label>
+            <div class="input-group">
+            <input type="password" class="form-control" name="password" id="regPassword" required>
+            <button type="button" class="btn toggle-password" id="toggleRegPassword">
+            <i class="fas fa-eye"></i>
+            </button>
+             </div>
+            <button type="submit" class="btn btn-purple w-100">Sign Up</button>
+          </form>
         </div>
-        <div class="mb-3">
-          <label>Password</label>
-          <input type="password" class="form-control" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-purple w-100">Login</button>
-      </form>
-    </div>
-<!-- Register Form -->
-<div class="tab-pane fade" id="registerTab" role="tabpanel">
-  <form action="register.php" method="POST" id="registerForm">
-    <div class="mb-3">
-      <label>Name</label>
-      <input type="text" class="form-control" name="name" id="regName" required>
-    </div>
-    <div class="mb-3">
-      <label>Email</label>
-      <input type="email" class="form-control" name="email" id="regEmail" required>
-    </div>
-    <div class="mb-3">
-      <label>Password</label>
-      <div class="input-group">
-        <input type="password" class="form-control" name="password" id="regPassword" required>
-        <button type="button" class="btn btn-outline-secondary" id="toggleRegPassword">Show</button>
       </div>
     </div>
-    <button type="submit" class="btn btn-purple w-100" id="registerBtn" disabled>Register</button>
-  </form>
+  </div>
+  <!-- Right Side: Welcome Panel -->
+<div class="auth-right">
+  <div class="overlay-text" id="welcomeMessage">
+    <h2>Hey<br>Welcome<br>Back</h2>
+  </div>
 </div>
+<!-- Floating Social Icons -->
+<div class="floating-icons">
+  <a href="https://wa.me/2347017557260" class="whatsapp-icon" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  <a href="https://instagram.com/_RIBBOW_" class="instagram-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+  <a href="https://www.tiktok.com/@shuir_dar" class="tiktok-icon" target="_blank"><i class="fab fa-tiktok"></i></a>
+</div>
+
+<!-- Dark/Light Mode Toggle -->
+<button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+  <i class="fas fa-moon"></i>
+</button>
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+  <p class="mb-0">&copy; 2025 RIBBOW. All rights reserved.</p>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
 </body>
