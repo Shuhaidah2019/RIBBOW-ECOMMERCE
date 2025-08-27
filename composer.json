@@ -1,0 +1,17 @@
+{
+    "name": "shuhaidah/ribbow",
+    "autoload": {
+        "psr-4": {
+            "Shuhaidah\\Ribbow\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shuhaidah Rabiu Sanusi",
+            "email": "shuhaidahrabiu@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.10"
+    }
+}

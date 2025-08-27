@@ -1,193 +1,147 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const currentPage = window.location.pathname;
 
+  // 🔐 Redirect if user is not logged in and tries to access protected pages
+  const protectedPages = ["/shop.php", "/cart.php", "/checkout.php", "/orders.php"];
+  const isProtected = protectedPages.some(page => currentPage.includes(page));
 
-// ===============================
-// DOM Loaded Handler
-// ===============================
-document.addEventListener("DOMContentLoaded", function () {
-  const path = window.location.pathname;
-  const currentPage = path.substring(path.lastIndexOf("/") + 1);
-
-  // Redirect if not logged in
-  const user = localStorage.getItem("loggedInUser");
-
-  if (
-    currentPage === "index.html" ||
-    ["shop.html", "cart.html", "checkout.html"].includes(currentPage)
-  ) {
-    if (!user) {
-      alert("Please log in to access this page.");
-      window.location.href = "auth.html";
-    }
-  }
-
-//dark and light mode
-  document.addEventListener("DOMContentLoaded", function () {
-  const themeToggle = document.getElementById("themeToggle");
-  const icon = themeToggle.querySelector("i");
-
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-    icon.classList.remove("fa-moon");
-    icon.classList.add("fa-sun");
-  }
-
-  themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-
-    if (document.body.classList.contains("dark-mode")) {
-      icon.classList.remove("fa-moon");
-      icon.classList.add("fa-sun");
-      localStorage.setItem("theme", "dark");
-    } else {
-      icon.classList.remove("fa-sun");
-      icon.classList.add("fa-moon");
-      localStorage.setItem("theme", "light");
-    }
-  });
-});
-
-
-  // ===============================
-  // Background Video Playlist Logic
-  // ===============================
-  const video = document.getElementById("heroVideo");
-
-  if (video) {
-    const videoSources = [
-      "media/bg-video.mp4",
-      "media/2bg-video.mp4",
-      "media/3bg-video.mp4"
-    ];
-
-    let currentVideo = 0;
-
-    function playNextVideo() {
-      video.src = videoSources[currentVideo];
-      video.load();
-      video.play();
-      currentVideo = (currentVideo + 1) % videoSources.length;
-    }
-
-    video.addEventListener("ended", playNextVideo);
-    playNextVideo();
-  }
-});
-
-// ===============================
-// Redirect to shop.html if user is logged in
-// ===============================
-function goToShop() {
-  const user = JSON.parse(localStorage.getItem("loggedInUser"));
-  if (user) {
-    window.location.href = "shop.html";
-  } else {
-    alert("Please login to continue shopping.");
+  if (!loggedInUser && isProtected) {
     window.location.href = "auth.html";
+    return;
   }
-}
 
-// ===============================
-// Logout Handler
-// ===============================
-function logoutUser() {
-  localStorage.removeItem("loggedInUser");
-  alert("You have been logged out.");
-  window.location.href = "auth.html";
-}
-
-//form options//
-document.addEventListener("DOMContentLoaded", () => {
-  const loginTab = document.getElementById("login-tab");
-  const signupTab = document.getElementById("signup-tab");
-  const welcomeText = document.getElementById("welcomeMessage");
-
-  if (!loginTab || !signupTab || !welcomeText) return;
-
-  // Click event for Login
-  loginTab.addEventListener("click", () => {
-    welcomeText.innerHTML = "<h2>Hey<br>Welcome<br>Back!</h2>";
-  });
-
-  // Click event for Signup
-  signupTab.addEventListener("click", () => {
-    welcomeText.innerHTML = "<h2>Hey<br>Nice to<br>Meet You!</h2>";
-  });
-
-  // Detect if opened via auth.html#signin
-  if (window.location.hash === "#signin") {
-    welcomeText.innerHTML = "<h2>Hey<br>Nice to<br>Meet You</h2>";
+  // 👋 Show welcome message if user is logged in
+  const welcomeElement = document.getElementById("welcomeUser");
+  if (loggedInUser && welcomeElement) {
+    welcomeElement.textContent = `Hi, ${loggedInUser.username}`;
   }
-});
 
-//toggle password
-document.addEventListener("DOMContentLoaded", () => {
-  const toggleBtn = document.getElementById("toggleRegPassword");
-  const passwordInput = document.getElementById("regPassword");
-
-  toggleBtn.addEventListener("click", () => {
-    const type = passwordInput.getAttribute("type");
-    if (type === "password") {
-      passwordInput.setAttribute("type", "text");
-      toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
-    } else {
-      passwordInput.setAttribute("type", "password");
-      toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+  // 🚪 Logout
+  window.logoutUser = () => {
+    const userId = loggedInUser?.user_id || loggedInUser?.id;
+    if (userId) {
+      localStorage.removeItem(`cart_${userId}`);
     }
-  });
-});
+    localStorage.removeItem("loggedInUser");
+    window.location.href = "auth.html";
+  };
 
+  // 🛒 Update Cart Badge in Navbar
+  const updateCartBadge = () => {
+    const userId = loggedInUser?.user_id || loggedInUser?.id;
+    const cartKey = `cart_${userId}`;
+    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
-//categorie section
-document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const category = urlParams.get('category'); // "beaded", "totes", etc.
-
-  const allProducts = document.querySelectorAll('.product-card');
-
-  allProducts.forEach(product => {
-    const productCategory = product.dataset.category;
-
-    if (!category || category === 'all') {
-      product.style.display = 'block'; // Show all
-    } else if (productCategory === category) {
-      product.style.display = 'block'; // Show only the selected category
-    } else {
-      product.style.display = 'none'; // Hide other categories
+    const badge = document.getElementById("cartBadge");
+    if (badge) {
+      badge.textContent = cart.length;
+      badge.style.display = cart.length > 0 ? "inline-block" : "none";
     }
-  });
-});
+  };
 
-// Enable submenu toggle inside dropdown
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(function (element) {
-    element.addEventListener('click', function (e) {
+  // 📦 Add to Cart
+  window.addToCart = (product) => {
+    const userId = loggedInUser?.user_id || loggedInUser?.id;
+
+    if (!userId) {
+      alert("You must be logged in to add items to the cart.");
+      return;
+    }
+
+    const cartKey = `cart_${userId}`;
+    const existingCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    const alreadyExists = existingCart.some(item => item.id === product.id);
+    if (alreadyExists) {
+      alert("Item already in cart.");
+      return;
+    }
+
+    existingCart.push(product);
+    localStorage.setItem(cartKey, JSON.stringify(existingCart));
+    updateCartBadge();
+    alert("✅ Added to cart!");
+  };
+
+  // ❌ Remove from Cart
+  window.removeFromCart = (productId) => {
+    const userId = loggedInUser?.user_id || loggedInUser?.id;
+    const cartKey = `cart_${userId}`;
+    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    const updatedCart = cart.filter(item => item.id !== productId);
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+    updateCartBadge();
+     // Optionally make this dynamic later
+  };
+
+  // 🚀 Initialize badge on load
+  updateCartBadge();
+});
+window.removeFromCart = (productId) => {
+  const userId = loggedInUser?.user_id || loggedInUser?.id;
+  const cartKey = `cart_${userId}`;
+  const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+  const updatedCart = cart.filter(item => item.id !== productId);
+  localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+  updateCartBadge();
+
+  // **Re-render the cart UI if this function exists**
+  if (typeof displayCartItems === 'function') {
+    displayCartItems();
+  } else {
+    // fallback: reload page (less smooth)
+    window.location.reload();
+  }
+};
+
+//shop.php nav bar
+document.querySelectorAll('.dropdown-submenu > a').forEach(el => {
+  el.addEventListener('click', function(e) {
+    if (window.innerWidth < 992) { // Mobile view
       e.preventDefault();
-      e.stopPropagation();
-      let submenu = this.nextElementSibling;
-      if (submenu && submenu.classList.contains('dropdown-menu')) {
-        submenu.classList.toggle('show');
+      let nextMenu = this.nextElementSibling;
+      if (nextMenu && nextMenu.classList.contains('dropdown-menu')) {
+        nextMenu.classList.toggle('show');
       }
+    }
+  });
+});
+
+
+
+//animations
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({
+      behavior: 'smooth'
     });
   });
 });
 
-//sub menu or categories
-document.addEventListener("DOMContentLoaded", () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const category = urlParams.get("category"); // e.g. "beaded", "hairclips", etc.
+const scrollElements = document.querySelectorAll('.scroll-animate');
 
-  const allProducts = document.querySelectorAll(".product-card");
+const elementInView = (el, dividend = 1) => {
+  const elementTop = el.getBoundingClientRect().top;
+  return elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend;
+};
 
-  allProducts.forEach(product => {
-    const productCategory = product.dataset.category;
+const displayScrollElement = (element) => element.classList.add('show');
 
-    if (!category || category === "all") {
-      product.style.display = "block"; // Show all products
-    } else if (productCategory === category) {
-      product.style.display = "block"; // Show matching
-    } else {
-      product.style.display = "none"; // Hide others
-    }
+const handleScrollAnimation = () => {
+  scrollElements.forEach(el => {
+    if (elementInView(el, 1.25)) displayScrollElement(el);
   });
-});
+};
+
+window.addEventListener('scroll', () => { handleScrollAnimation(); });
+window.addEventListener('load', () => { handleScrollAnimation(); });
+
+
+
+
+
+

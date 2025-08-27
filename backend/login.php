@@ -1,43 +1,34 @@
 <?php
-// login.php
-session_start(); // ✅ Start session
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "ribbowsite_db";
+session_start();
+include '../config/db.php';
 
-$conn = new mysqli($host, $user, $pass, $dbname);
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $email = $_POST['email'];
+  $password = $_POST['password'];
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+  $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
-$stmt = $conn->prepare("SELECT id, name, password FROM users WHERE email = ?");
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
+  if ($result->num_rows === 1) {
+    $user = $result->fetch_assoc();
 
-if ($result->num_rows === 1) {
-  $row = $result->fetch_assoc();
+    if (password_verify($password, $user['password'])) {
+      // ✅ Save necessary user info into the session
+      $_SESSION['user_id'] = $user['id'];
+      $_SESSION['user_name'] = $user['name'];
+      $_SESSION['user_email'] = $user['email'];
 
-  if (password_verify($password, $row['password'])) {
-    // ✅ Set session variables
-    $_SESSION['user_id'] = $row['id'];
-    $_SESSION['user_name'] = $row['name'];
-
-    // ✅ Redirect to protected page
-    header("Location: ../public/index.php");
-    exit();
-  } else {
-    echo "<script>alert('Invalid password'); window.location.href = '../public/auth.html';</script>";
+      // ✅ Redirect to homepage after successful login
+      header("Location: /RIBBOW/public/index.php");
+      exit();
+    }
   }
-} else {
-  echo "<script>alert('Email not found'); window.location.href = '../public/auth.html';</script>";
-}
 
-$stmt->close();
-$conn->close();
-?>
+  // ❌ If login fails (wrong email or password), redirect back to login page
+  header("Location: /RIBBOW/public/auth.html?error=invalid");
+  exit();
+}
+?>   

@@ -1,0 +1,82 @@
+@media (max-width: 768px) {
+    body {
+        flex-direction: column; /* stack sidebar on top of main-content */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+}
+
+.sidebar {
+    width: 200px;
+    background: #800080; /* RIBBOW purple */
+    color: #fff;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar h3 {
+    margin-top: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.main-content {
+    padding: 20px;
+    flex-grow: 1;
+    background-color: #fffafc;
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.card {
+    background: #f1e6f9;
+    padding: 20px;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    background: #f1e6f9;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.login-container input {
+    width: 80%;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+.login-container button {
+    padding: 10px 20px;
+    background: #800080;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+}
+}

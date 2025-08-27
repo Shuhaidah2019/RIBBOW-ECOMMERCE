@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Signup | RIBBOW</title>
+  <title>Sign Up | RIBBOW</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
 <div class="form-container">
   <h2 class="text-center mb-4">Create Your RIBBOW Account</h2>
-  <form action="signup.php" method="POST">
+  <form action="signup.php" method="POST" id="signupForm">
+    <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
+
     <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" id="username" required>
+      <label for="name" class="form-label">Full Name</label>
+      <input type="text" class="form-control" name="name" id="name" required>
     </div>
     <div class="mb-3">
       <label for="email" class="form-label">Email address</label>
@@ -23,15 +24,15 @@
     </div>
     <div class="mb-3">
       <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" name="password" id="password" required>
+      <div class="input-group">
+        <input type="password" class="form-control" name="password" id="regPassword" required>
+        <button type="button" class="btn btn-outline-secondary" id="toggleRegPassword">Show</button>
+      </div>
     </div>
-    <button type="submit" class="btn btn-purple w-100">Signup</button>
+    <button type="submit" class="btn btn-purple w-100" id="signupBtn">Sign Up</button>
   </form>
-  <div class="switch-link">
-    Already have an account? <a href="login.html">Login here</a>
-  </div>
+  <p class="text-center mt-3">Already have an account? <a href="auth.html" style="color:#8a2be2;">Log in here</a></p>
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
