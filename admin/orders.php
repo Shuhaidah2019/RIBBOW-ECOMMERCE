@@ -1,7 +1,7 @@
 <?php
 require_once '../backend/helpers/csrf-helper.php';
 
-session_start();
+
 if (!isset($_SESSION['admin_id'])) {
     header("Location: admin-login.php"); // redirect if not logged in
     exit();

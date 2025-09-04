@@ -22,8 +22,10 @@ function sendOrderEmail($toEmail, $toName, $orderHtml, $subject = "Your RIBBOW O
         $mail->addAddress($toEmail, $toName);
 
         // Content
+        $mail->CharSet = 'UTF-8';
+       $mail->Encoding = 'base64';
         $mail->isHTML(true);
-        $mail->Subject = $subject;
+        $mail->Subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
         $mail->Body    = $orderHtml;
 
         $mail->send();

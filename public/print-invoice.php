@@ -73,7 +73,7 @@ $items = json_decode($order['items'], true);
     <div class="mb-4">
       <h5 class="text-purple">Order Summary</h5>
       <p>
-        <strong>Order ID:</strong> #<?= $orderId ?><br>
+        <strong>Order ID:</strong> <?= $orderId ?><br>
         <strong>Date:</strong> <?= date("F j, Y", strtotime($order['created_at'])) ?><br>
         <strong>Status:</strong> <?= ucfirst($order['status']) ?>
       </p>

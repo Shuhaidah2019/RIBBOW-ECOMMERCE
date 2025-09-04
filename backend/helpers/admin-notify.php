@@ -27,7 +27,7 @@ function notifyAdminNewOrder($order) {
         $itemList .= "- {$itemName} x {$qty} (₦{$itemPrice})<br>";
     }
 
-    $subject = "🛒 New Order #{$orderId} Received!";
+    $subject = " New Order #{$orderId} Received!";
     $body = "
         <p>Hello Admin,</p>
         <p>A new order has been placed on <strong>RIBBOW</strong>:</p>

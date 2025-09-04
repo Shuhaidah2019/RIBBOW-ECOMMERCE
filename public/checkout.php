@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
 
                 // Send email to customer
-                $customerSubject = "✅ Your RIBBOW Order #{$newOrderId} Confirmation";
+                $customerSubject = "Your RIBBOW Order #{$newOrderId} Confirmation";
                 $customerBody = "
                     <p>Hi {$fullname},</p>
                     <p>Thank you for shopping with <strong>RIBBOW</strong>! Your order has been received and is being processed.</p>
